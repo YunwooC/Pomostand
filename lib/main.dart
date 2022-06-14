@@ -1,64 +1,51 @@
 import 'package:flutter/material.dart';
 
-class MyAppBar extends StatelessWidget {
-  const MyAppBar({required this.title, super.key});
-
-  // Fields in a Widget subclass are always marked "final".
-
-  final Widget title;
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 56.0, // in logical pixels
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      decoration: BoxDecoration(color: Colors.blue[500]),
-      // Row is a horizontal, linear layout.
-      child: Row(
-        // <Widget> is the type of items in the list.
-        children: [
-          const IconButton(
-            icon: Icon(Icons.menu),
-            tooltip: 'Navigation menu',
-            onPressed: null, // null disables the button
-          ),
-          // Expanded expands its child
-          // to fill the available space.
-          Expanded(
-            child: title,
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.red,
+          title: const Text(
+              "Pomostand!",
+            ),
+        ),
+        
+        // container encapsulates the column
+        body: Container(
+          
+          margin: EdgeInsets.all(25),
+          color: Colors.lightGreen,        // green to see the container clearly
+          
+          
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Text(
+                "POMOSTAND",
+                style: const TextStyle(fontSize: 40)
+              ),
+              Image.asset('assets/images/tomato.png'),
+              TextButton(
+                onPressed: null,
+                child: const Text(
+                  "CLICK ME",
+                  style: const TextStyle(fontSize: 20)
+                ),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                  padding: MaterialStateProperty.all(
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20)
+                  )
+                )
+              ),
+            ]
           )
-        ],
-      ),
-    );
-  }
-}
-
-class MyScaffold extends StatelessWidget {
-  const MyScaffold({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // Material is a conceptual piece
-    // of paper on which the UI appears.
-    return Material(
-      // Column is a vertical, linear layout.
-      child: Column(
-        children: [
-          MyAppBar(
-            title: Text(
-              'Example',
-              style: Theme.of(context) //
-                  .primaryTextTheme
-                  .headline6,
-            ),
-          ),
-          const Expanded(
-            child: Center(
-              child: Text('Insert Pomodoro Stand'),
-            ),
-          ),
-        ],
-      ),
+        )
+      )
     );
   }
 }
@@ -67,9 +54,7 @@ void main() {
   runApp(
     const MaterialApp(
       title: 'My app', // used by the OS task switcher
-      home: SafeArea(
-        child: MyScaffold(),
-      ),
+      home: MyApp(),
     ),
   );
 }
