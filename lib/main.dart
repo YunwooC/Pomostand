@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 
 class MyApp extends StatelessWidget {
@@ -27,25 +28,28 @@ class IndexPage extends StatelessWidget {
         
         // container encapsulates the column
       body: Container(
-          
-        margin: EdgeInsets.all(25),       
+        
+        margin: EdgeInsets.all(40),       
         decoration: const BoxDecoration(color: Colors.lightGreen),   // green to see the container clearly
           
-          
+        // Main Body columnized
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            // Title
             const Text(
               "POMOSTAND",
               style: const TextStyle(fontSize: 40),
                 
             ),
 
+            // mage btw I got scammed they said it was transparent png but it's ugly checkerboard :/ placeholder for now
             Image.asset(
               'assets/images/tomato.png',
               fit: BoxFit.cover,
             ),
 
+            // Button to navigate to next page
             TextButton(
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -77,9 +81,57 @@ class TimerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+
+      // Top AppBar
       appBar: AppBar(
+        backgroundColor: Colors.red,
         title: Text(title)
       ),
+
+      // Body
+      body: Container(
+        margin: EdgeInsets.all(40),    
+
+        // Formatting widgets in a container   
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+
+            Expanded(
+              child: Container()
+            ),
+
+            // Tomato Progress Ring. Expanded setting must be kept
+            Expanded(
+              child: Placeholder(
+                 color: Colors.red,
+              ),
+              flex: 3,
+            ),
+
+            // Timer goes here. Expanded setting to be kept.
+            Expanded(
+              child: Placeholder( color: Colors.blue )
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                  onPressed: null,
+                  child: const Text("Start")
+
+                ),
+                TextButton(
+                  onPressed: null,
+                  child: const Text("Stop")
+                )
+              ]
+            )
+          ]
+        )
+      )
     );
   }
 }
