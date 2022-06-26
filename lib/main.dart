@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-
+import 'package:percent_indicator/percent_indicator.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -8,9 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pomodoro',
-      home: const IndexPage(title: 'IndexPage')
-    );
+        title: 'Pomodoro', home: const IndexPage(title: 'IndexPage'));
   }
 }
 
@@ -21,118 +19,156 @@ class IndexPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.red,
-        title: Text(title),
-      ),
-        
+        appBar: AppBar(
+          backgroundColor: Colors.red,
+          title: Text(title),
+        ),
+
         // container encapsulates the column
-      body: Container(
-        
-        margin: EdgeInsets.all(40),       
-        decoration: const BoxDecoration(color: Colors.lightGreen),   // green to see the container clearly
-          
-        // Main Body columnized
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            // Title
-            const Text(
-              "POMOSTAND",
-              style: const TextStyle(fontSize: 40),
-                
-            ),
+        body: Container(
+            margin: EdgeInsets.all(40),
+            decoration: const BoxDecoration(
+                color: Colors.lightGreen), // green to see the container clearly
 
-            // mage btw I got scammed they said it was transparent png but it's ugly checkerboard :/ placeholder for now
-            Image.asset(
-              'assets/images/tomato.png',
-              fit: BoxFit.cover,
-            ),
+            // Main Body columnized
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // Title
+                  const Text(
+                    "POMOSTAND",
+                    style: const TextStyle(fontSize: 40),
+                  ),
 
-            // Button to navigate to next page
-            TextButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const TimerPage(title: 'Timer');
-                }));
-              },
-              child: const Text(
-                "CLICK ME",
-                style: const TextStyle(fontSize: 20)
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                padding: MaterialStateProperty.all(
-                  const EdgeInsets.symmetric(vertical: 10, horizontal: 20)
-                )
-              )
-            ),
-          ]
-        )
-      )
-    );
+                  // mage btw I got scammed they said it was transparent png but it's ugly checkerboard :/ placeholder for now
+                  Image.asset(
+                    'assets/images/tomato.png',
+                    fit: BoxFit.cover,
+                  ),
+
+                  // Button to navigate to next page
+                  TextButton(
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const TimerPage(title: 'Timer');
+                        }));
+                      },
+                      child: const Text("CLICK ME",
+                          style: const TextStyle(fontSize: 20)),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.red),
+                          padding: MaterialStateProperty.all(
+                              const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20)))),
+                ])));
   }
 }
 
-class TimerPage extends StatelessWidget {
+class TimerPage extends StatefulWidget {
   const TimerPage({Key? key, required this.title}) : super(key: key);
   final String title;
+  @override
+  TimerPageState createState() => TimerPageState();
+}
+
+class TimerPageState extends State<TimerPage> {
+  double percent = 0;
+  static int TimeInMin = 2;
+  static int TimeInSec = TimeInMin * 60;
+
+  static int LeftMin = TimeInMin;
+  static int LeftSec = 0;
+  bool stop = false;
+
+  stopTimer() {
+    stop = true;
+  }
+
+  startTimer() {
+    stop = false;
+    const oneSec = Duration(seconds: 1);
+
+    int currentSec = 0;
+    int leftAllSec = TimeInSec;
+    LeftMin = TimeInMin;
+    LeftSec = 0;
+
+    Timer timer = Timer.periodic(oneSec, (Timer timer) {
+      if (stop == true) {
+        timer.cancel();
+        return;
+      }
+      setState(() {
+        currentSec++;
+        leftAllSec--;
+
+        LeftMin = (leftAllSec / 60).floor();
+        LeftSec = leftAllSec % 60;
+
+        percent = currentSec / TimeInSec;
+
+        if (leftAllSec == 0) {
+          timer.cancel();
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: false,
 
-      // Top AppBar
-      appBar: AppBar(
-        backgroundColor: Colors.red,
-        title: Text(title)
-      ),
+        // Top AppBar
+        appBar: AppBar(backgroundColor: Colors.red),
 
-      // Body
-      body: Container(
-        margin: EdgeInsets.all(40),    
+        // Body
+        body: Container(
+            margin: EdgeInsets.all(40),
 
-        // Formatting widgets in a container   
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
+            // Formatting widgets in a container
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(child: Container()),
+                  Text("Pomostand Clock"),
 
-            Expanded(
-              child: Container()
-            ),
+                  // Tomato Progress Ring. Expanded setting must be kept
+                  Expanded(
+                      child: CircularPercentIndicator(
+                    percent: percent,
+                    animation: true,
+                    animateFromLastPercent: true,
+                    radius: 100,
+                    lineWidth: 20,
+                  )),
+                  const SizedBox(height: 100.0),
+                  // Timer goes here. Expanded setting to be kept.
+                  Expanded(child: Text("$LeftMin : $LeftSec")),
 
-            // Tomato Progress Ring. Expanded setting must be kept
-            Expanded(
-              child: Placeholder(
-                 color: Colors.red,
-              ),
-              flex: 3,
-            ),
-
-            // Timer goes here. Expanded setting to be kept.
-            Expanded(
-              child: Placeholder( color: Colors.blue )
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
-                  onPressed: null,
-                  child: const Text("Start")
-
-                ),
-                TextButton(
-                  onPressed: null,
-                  child: const Text("Stop")
-                )
-              ]
-            )
-          ]
-        )
-      )
-    );
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                            onPressed: startTimer,
+                            child: Text("Start"),
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.red),
+                                foregroundColor:
+                                    MaterialStateProperty.all(Colors.white))),
+                        TextButton(
+                            onPressed: stopTimer,
+                            child: Text("Stop"),
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.red),
+                                foregroundColor:
+                                    MaterialStateProperty.all(Colors.white))),
+                      ])
+                ])));
   }
 }
 
