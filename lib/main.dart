@@ -29,8 +29,7 @@ class IndexPage extends StatelessWidget {
         // container encapsulates the column
       body: Container(
         
-        margin: EdgeInsets.all(40),       
-        decoration: const BoxDecoration(color: Colors.lightGreen),   // green to see the container clearly
+        margin: EdgeInsets.all(40),    // green to see the container clearly
           
         // Main Body columnized
         child: Column(
