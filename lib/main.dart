@@ -81,13 +81,13 @@ class TimerPageState extends State<TimerPage> {
   static int LeftMin = TimeInMin;
   static int LeftSec = 0;
   static String Time = "";
+  bool pause = false;
   bool stop = false;
   bool _IsVisibleStart = true;
   bool _IsVisiblePause = true;
 
-
   pauseTimer() {
-    stop = true;
+    pause = true;
 
     setState(() {
       _IsVisiblePause = false;
@@ -113,6 +113,9 @@ class TimerPageState extends State<TimerPage> {
         timer.cancel();
         return;
       }
+      if (pause) {
+        return;
+      }
       setState(() {
         currentSec++;
         leftAllSec--;
@@ -131,8 +134,8 @@ class TimerPageState extends State<TimerPage> {
 
 // NEED TO BE IMPLEMENTED
   resumeTimer() {
-    // RESUMES TIMER FROM WHERE IT WAS PAUSED 
-
+    // RESUMES TIMER FROM WHERE IT WAS PAUSED
+    pause = false;
     setState(() {
       _IsVisiblePause = true;
     });
@@ -140,6 +143,11 @@ class TimerPageState extends State<TimerPage> {
 
 // NEED TO BE IMPLEMENTED
   resetTimer() {
+    LeftMin = TimeInMin;
+    LeftSec = 0;
+    pause = false;
+    stop = true;
+    percent = 0;
     // RESETS TIMER BACK TO THE START
     setState(() {
       _IsVisibleStart = true;
@@ -148,8 +156,10 @@ class TimerPageState extends State<TimerPage> {
   }
 
   getTime() {
-    Time = LeftMin<10 ? '0'+LeftMin.toString():LeftMin.toString();
-    Time = Time + ' : ' + (LeftSec<10 ? '0'+LeftSec.toString() : LeftSec.toString());
+    Time = LeftMin < 10 ? '0' + LeftMin.toString() : LeftMin.toString();
+    Time = Time +
+        ' : ' +
+        (LeftSec < 10 ? '0' + LeftSec.toString() : LeftSec.toString());
     return Text(Time);
   }
 
@@ -196,44 +206,36 @@ class TimerPageState extends State<TimerPage> {
                         ),
                         // Pause Button, Resume Button
                         Visibility(
-                          visible: _IsVisiblePause,
-                          child: TextButton(
-                            onPressed: pauseTimer,
-                            child: Text("Pause"),
+                            visible: _IsVisiblePause,
+                            child: TextButton(
+                                onPressed: pauseTimer,
+                                child: Text("Pause"),
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all(Colors.red),
+                                    foregroundColor: MaterialStateProperty.all(
+                                        Colors.white))),
+                            // Resume Button appears in place of pause
+                            replacement: TextButton(
+                              onPressed: resumeTimer,
+                              child: Text("Resume"),
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all(Colors.red),
+                                  foregroundColor:
+                                      MaterialStateProperty.all(Colors.white)),
+                            )),
+                        // Reset Button
+                        TextButton(
+                            onPressed: resetTimer,
+                            child: Text("Reset"),
                             style: ButtonStyle(
                                 backgroundColor:
                                     MaterialStateProperty.all(Colors.red),
                                 foregroundColor:
-                                    MaterialStateProperty.all(Colors.white)
-                            )
-                          ),
-                          // Resume Button appears in place of pause
-                          replacement: TextButton(
-                            onPressed: resumeTimer,
-                            child: Text("Resume"),
-                            style: ButtonStyle(
-                              backgroundColor:
-                                MaterialStateProperty.all(Colors.red),
-                              foregroundColor:
-                                MaterialStateProperty.all(Colors.white)
-                            ),
-                          )
-                        ),
-                        // Reset Button
-                        TextButton(
-                          onPressed: resetTimer,
-                          child: Text("Reset"),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.red),
-                            foregroundColor: MaterialStateProperty.all(Colors.white)
-                          )
-                        )
-                      ]
-                  )
-                ]   
-        )
-      )
-    );
+                                    MaterialStateProperty.all(Colors.white)))
+                      ])
+                ])));
   }
 }
 
