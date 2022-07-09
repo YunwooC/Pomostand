@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:developer';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -8,12 +10,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Pomodoro', home: const IndexPage(title: 'IndexPage'));
+        title: 'Pomodoro', home: IndexPage(title: 'IndexPage'));
   }
 }
 
 class IndexPage extends StatelessWidget {
-  const IndexPage({Key? key, required this.title}) : super(key: key);
+  IndexPage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -22,6 +24,7 @@ class IndexPage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.red,
           title: Text(title),
+
         ),
 
         // container encapsulates the column
@@ -62,6 +65,7 @@ class IndexPage extends StatelessWidget {
                           padding: MaterialStateProperty.all(
                               const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 20)))),
+ 
                 ])));
   }
 }
@@ -85,6 +89,37 @@ class TimerPageState extends State<TimerPage> {
   bool stop = false;
   bool _IsVisibleStart = true;
   bool _IsVisiblePause = true;
+
+  // set up for coin system
+  int _counter = 0;
+
+  // time select options
+  final unmodified_times = <String>[];
+  final times = <String>[];
+  String _dropdownValue = "10";
+
+  @override
+  void initState() {
+    print("init state called");
+    super.initState();
+    _loadCounter();
+  }
+
+  //Loading counter value on start
+  Future<void> _loadCounter() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _counter = (prefs.getInt('counter') ?? 0);
+    });
+  }
+  //Incrementing counter after click
+  Future<void> _incrementCounter() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _counter = (prefs.getInt('counter') ?? 0) + 1;
+      prefs.setInt('counter', _counter);
+    });
+  }
 
   pauseTimer() {
     pause = true;
@@ -163,13 +198,18 @@ class TimerPageState extends State<TimerPage> {
     return Text(Time);
   }
 
+
   @override
   Widget build(BuildContext context) {
+    print("build called");
     return Scaffold(
         resizeToAvoidBottomInset: false,
 
         // Top AppBar
-        appBar: AppBar(backgroundColor: Colors.red),
+        appBar: AppBar(
+          backgroundColor: Colors.red,
+          title: Text('$_counter'),
+        ),
 
         // Body
         body: Container(
@@ -233,9 +273,49 @@ class TimerPageState extends State<TimerPage> {
                                 backgroundColor:
                                     MaterialStateProperty.all(Colors.red),
                                 foregroundColor:
-                                    MaterialStateProperty.all(Colors.white)))
-                      ])
+                                    MaterialStateProperty.all(Colors.white)
+                            )
+                        ),
+                        
+                        DropdownButton<String>(
+                          value: _dropdownValue,
+                          onChanged: (String? newValue) {
+                            print('update called');
+                            setState(() {
+                              _dropdownValue = newValue!;
+                            });
+                          },
+                          items: [
+                          DropdownMenuItem(
+                            child: Text("10"),
+                            value: "10"
+                          ),
+                          DropdownMenuItem(
+                            child: Text("20"),
+                            value: "20",
+                          ),
+                          DropdownMenuItem(
+                            child: Text("30"),
+                            value: "30",
+                          ),
+                          DropdownMenuItem(
+                            child: Text("40"),
+                            value: "40",
+                          ),
+                          DropdownMenuItem(
+                            child: Text("50"),
+                            value: "50",
+                          ),
+                        ],
+                        )
+                      ]
+                  ),
+                  TextButton(
+                          onPressed: _incrementCounter,
+                          child: Text("Counter+"),
+                  )
                 ])));
+    
   }
 }
 
@@ -247,3 +327,4 @@ void main() {
     ),
   );
 }
+
