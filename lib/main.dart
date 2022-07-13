@@ -4,6 +4,9 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
+
+
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -13,6 +16,10 @@ class MyApp extends StatelessWidget {
         title: 'Pomodoro', home: IndexPage(title: 'IndexPage'));
   }
 }
+
+
+
+// Index Page Display
 
 class IndexPage extends StatelessWidget {
   IndexPage({Key? key, required this.title}) : super(key: key);
@@ -64,11 +71,24 @@ class IndexPage extends StatelessWidget {
                               MaterialStateProperty.all<Color>(Colors.red),
                           padding: MaterialStateProperty.all(
                               const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20)))),
+                                  vertical: 10, horizontal: 20)))
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return const TomatoPage(title: 'Tomato Stand');
+                      }));
+                    },
+                    child: const Text("TO STAND")
+                  )
  
                 ])));
   }
 }
+
+
+
+// Timer Page Display
 
 class TimerPage extends StatefulWidget {
   const TimerPage({Key? key, required this.title}) : super(key: key);
@@ -81,7 +101,6 @@ class TimerPageState extends State<TimerPage> {
   double percent = 0;
   static int TimeInMin = 2;
   static int TimeInSec = TimeInMin * 60;
-
   static int LeftMin = TimeInMin;
   static int LeftSec = 0;
   static String Time = "";
@@ -90,8 +109,10 @@ class TimerPageState extends State<TimerPage> {
   bool _IsVisibleStart = true;
   bool _IsVisiblePause = true;
 
-  // set up for coin system
-  int _counter = 0;
+  // set up for coin system 
+  int _coin = 0;
+  List<String>? _tomatoes = [];
+
 
   // time select options
   final unmodified_times = <String>[];
@@ -100,27 +121,45 @@ class TimerPageState extends State<TimerPage> {
 
   @override
   void initState() {
-    print("init state called");
+    print("Timer: init state called");
     super.initState();
-    _loadCounter();
+    _loadAssets();
   }
 
-  //Loading counter value on start
-  Future<void> _loadCounter() async {
+  //Loading coin value on start
+  Future<void> _loadAssets() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _counter = (prefs.getInt('counter') ?? 0);
+      _coin = (prefs.getInt('coin') ?? 0);
+      _tomatoes = (prefs.getStringList('tomatoes') ?? []);
+      print('$_coin');
+      print('$_tomatoes');
     });
   }
-  //Incrementing counter after click
-  Future<void> _incrementCounter() async {
+  //Incrementing coin after click
+  Future<void> _incrementcoin() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _counter = (prefs.getInt('counter') ?? 0) + 1;
-      prefs.setInt('counter', _counter);
+      _coin = (prefs.getInt('coin') ?? 0) + 1;
+      prefs.setInt('coin', _coin);
     });
+    print("add coin: $_coin");
   }
-
+  Future<void> _decrementcoin() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _coin = (prefs.getInt('coin') ?? 0) - 1;
+      prefs.setInt('coin', _coin);
+    });
+    print("subract coin: $_coin");
+  }
+  Future<void> _saveassets () async {
+    print('tomatoes saved');
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('tomatoes', _tomatoes!);
+    prefs.setInt('coin', _coin);
+  }
+  // Timer Helper Functions
   pauseTimer() {
     pause = true;
 
@@ -129,10 +168,9 @@ class TimerPageState extends State<TimerPage> {
     });
   }
 
-// NEED MODIFICATION
   startTimer() {
     stop = false;
-    const oneSec = Duration(seconds: 1);
+    const oneSec = Duration(microseconds: 100000);
 
     int currentSec = 0;
     int leftAllSec = TimeInSec;
@@ -161,13 +199,15 @@ class TimerPageState extends State<TimerPage> {
         percent = currentSec / TimeInSec;
 
         if (leftAllSec == 0) {
-          timer.cancel();
+          print("Timer done");
+          _tomatoes?.add(TimeInMin.toString());
+          _saveassets();
+          resetTimer();
         }
       });
     });
   }
 
-// NEED TO BE IMPLEMENTED
   resumeTimer() {
     // RESUMES TIMER FROM WHERE IT WAS PAUSED
     pause = false;
@@ -176,7 +216,6 @@ class TimerPageState extends State<TimerPage> {
     });
   }
 
-// NEED TO BE IMPLEMENTED
   resetTimer() {
     LeftMin = TimeInMin;
     LeftSec = 0;
@@ -201,14 +240,13 @@ class TimerPageState extends State<TimerPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("build called");
+    print("timer page built");
     return Scaffold(
-        resizeToAvoidBottomInset: false,
 
         // Top AppBar
         appBar: AppBar(
           backgroundColor: Colors.red,
-          title: Text('$_counter'),
+          title: Text("Timer Page")
         ),
 
         // Body
@@ -310,13 +348,138 @@ class TimerPageState extends State<TimerPage> {
                         )
                       ]
                   ),
-                  TextButton(
-                          onPressed: _incrementCounter,
-                          child: Text("Counter+"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                        onPressed: _incrementcoin,
+                        child: Text("coin+"),
+                      ),
+                      TextButton(
+                        onPressed: _decrementcoin,
+                        child: Text("coin-")
+                      ),
+                      Text("$_coin"),
+                    ],
                   )
                 ])));
     
   }
+}
+
+
+
+// Fruit Stand Display
+class TomatoPage extends StatefulWidget {
+  const TomatoPage({Key? key, required this.title}) : super(key: key);
+  final String title;
+
+  @override
+  State <TomatoPage> createState() =>  TomatoPageState();
+}
+
+class  TomatoPageState extends State<TomatoPage> {
+  // assets
+  List<String> _tomatoes = [];
+  int _coin = 0;
+
+  @override
+  void initState() {
+    print("Tomato Status Page Initialized");
+    super.initState();
+    _loadAssets();
+  }
+
+  Future<void> _loadAssets() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _tomatoes = (prefs.getStringList('tomatoes') ?? []);
+      _coin = (prefs.getInt('coin') ?? 0);
+    });
+  }
+  Future<void> _saveassets () async {
+    print('assets saved');
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('tomatoes', _tomatoes);
+    prefs.setInt('coin', _coin);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.red,
+        title: Text("Tomato Stand Page"),
+      ),
+      body: Container(
+        margin: EdgeInsets.all(40),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(8), 
+                children: [
+                  for (var i in _tomatoes) InkWell(
+                    onTap: () {
+                      showAlertDialog(context: context, time: i, tomatoes: _tomatoes);
+                    },
+                    child: Image.asset(
+                      'assets/images/tomato.png',
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            TextButton(
+              child: Text("Sell All"),
+              onPressed: () {
+                for (var i in _tomatoes) {
+                  _coin = _coin + int.parse(i) * 10;
+                } 
+                _tomatoes.clear();
+                _saveassets();
+              }
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+showAlertDialog({required BuildContext context, required String time, required List<String> tomatoes}) {
+  int price = int.parse(time) * 10;
+
+  // set up the button
+  Widget okButton = TextButton(
+    child: Text("Sell"),
+    onPressed: () {  },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Tomato"),
+    content: Column (
+      children: [
+        Text("Time Focused: $time"),
+        Text("Price: $price")
+      ]
+    ),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
 
 void main() {
