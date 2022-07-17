@@ -82,7 +82,10 @@ class IndexPage extends StatelessWidget {
                     child: const Text("TO STAND")
                   )
  
-                ])));
+                ]
+            )
+        )
+    );
   }
 }
 
@@ -400,8 +403,10 @@ class  TomatoPageState extends State<TomatoPage> {
   Future<void> _saveassets () async {
     print('assets saved');
     final prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('tomatoes', _tomatoes);
-    prefs.setInt('coin', _coin);
+    setState(() {
+      prefs.setStringList('tomatoes', _tomatoes);
+      prefs.setInt('coin', _coin);
+    });
   }
 
   @override
