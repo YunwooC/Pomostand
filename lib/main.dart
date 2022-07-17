@@ -4,20 +4,14 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
-
-
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Pomodoro', home: IndexPage(title: 'IndexPage'));
+    return MaterialApp(title: 'Pomodoro', home: IndexPage(title: 'IndexPage'));
   }
 }
-
-
 
 // Index Page Display
 
@@ -31,7 +25,6 @@ class IndexPage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.red,
           title: Text(title),
-
         ),
 
         // container encapsulates the column
@@ -71,8 +64,7 @@ class IndexPage extends StatelessWidget {
                               MaterialStateProperty.all<Color>(Colors.red),
                           padding: MaterialStateProperty.all(
                               const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20)))
-                  ),
+                                  vertical: 10, horizontal: 20)))),
                   TextButton(
                     onPressed: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -89,8 +81,6 @@ class IndexPage extends StatelessWidget {
   }
 }
 
-
-
 // Timer Page Display
 
 class TimerPage extends StatefulWidget {
@@ -102,7 +92,7 @@ class TimerPage extends StatefulWidget {
 
 class TimerPageState extends State<TimerPage> {
   double percent = 0;
-  static int TimeInMin = 2;
+  static int TimeInMin = 0;
   static int TimeInSec = TimeInMin * 60;
   static int LeftMin = TimeInMin;
   static int LeftSec = 0;
@@ -111,16 +101,23 @@ class TimerPageState extends State<TimerPage> {
   bool stop = false;
   bool _IsVisibleStart = true;
   bool _IsVisiblePause = true;
+  List<int> numList = [];
 
-  // set up for coin system 
+  // set up for coin system
   int _coin = 0;
   List<String>? _tomatoes = [];
-
 
   // time select options
   final unmodified_times = <String>[];
   final times = <String>[];
   String _dropdownValue = "10";
+
+  initializeList() {
+    numList.clear();
+    for (int i = 10; i <= 120; i += 5) {
+      numList.add(i);
+    }
+  }
 
   @override
   void initState() {
@@ -139,6 +136,7 @@ class TimerPageState extends State<TimerPage> {
       print('$_tomatoes');
     });
   }
+
   //Incrementing coin after click
   Future<void> _incrementcoin() async {
     final prefs = await SharedPreferences.getInstance();
@@ -148,6 +146,7 @@ class TimerPageState extends State<TimerPage> {
     });
     print("add coin: $_coin");
   }
+
   Future<void> _decrementcoin() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -156,12 +155,14 @@ class TimerPageState extends State<TimerPage> {
     });
     print("subract coin: $_coin");
   }
-  Future<void> _saveassets () async {
+
+  Future<void> _saveassets() async {
     print('tomatoes saved');
     final prefs = await SharedPreferences.getInstance();
     prefs.setStringList('tomatoes', _tomatoes!);
     prefs.setInt('coin', _coin);
   }
+
   // Timer Helper Functions
   pauseTimer() {
     pause = true;
@@ -173,7 +174,7 @@ class TimerPageState extends State<TimerPage> {
 
   startTimer() {
     stop = false;
-    const oneSec = Duration(microseconds: 100000);
+    const oneSec = Duration(seconds: 1);
 
     int currentSec = 0;
     int leftAllSec = TimeInSec;
@@ -211,6 +212,13 @@ class TimerPageState extends State<TimerPage> {
     });
   }
 
+  setTimer(int timeInMin) {
+    TimeInMin = timeInMin;
+    TimeInSec = TimeInMin * 60;
+    LeftMin = TimeInMin;
+    LeftSec = 0;
+  }
+
   resumeTimer() {
     // RESUMES TIMER FROM WHERE IT WAS PAUSED
     pause = false;
@@ -240,17 +248,14 @@ class TimerPageState extends State<TimerPage> {
     return Text(Time);
   }
 
-
   @override
   Widget build(BuildContext context) {
+    initializeList();
     print("timer page built");
     return Scaffold(
 
         // Top AppBar
-        appBar: AppBar(
-          backgroundColor: Colors.red,
-          title: Text("Timer Page")
-        ),
+        appBar: AppBar(backgroundColor: Colors.red, title: Text("Timer Page")),
 
         // Body
         body: Container(
@@ -314,43 +319,25 @@ class TimerPageState extends State<TimerPage> {
                                 backgroundColor:
                                     MaterialStateProperty.all(Colors.red),
                                 foregroundColor:
-                                    MaterialStateProperty.all(Colors.white)
-                            )
-                        ),
-                        
+                                    MaterialStateProperty.all(Colors.white))),
+
                         DropdownButton<String>(
                           value: _dropdownValue,
                           onChanged: (String? newValue) {
                             print('update called');
+                            setTimer(int.parse(newValue.toString()));
                             setState(() {
                               _dropdownValue = newValue!;
                             });
                           },
-                          items: [
-                          DropdownMenuItem(
-                            child: Text("10"),
-                            value: "10"
-                          ),
-                          DropdownMenuItem(
-                            child: Text("20"),
-                            value: "20",
-                          ),
-                          DropdownMenuItem(
-                            child: Text("30"),
-                            value: "30",
-                          ),
-                          DropdownMenuItem(
-                            child: Text("40"),
-                            value: "40",
-                          ),
-                          DropdownMenuItem(
-                            child: Text("50"),
-                            value: "50",
-                          ),
-                        ],
+                          items: numList.map((int val) {
+                            return new DropdownMenuItem<String>(
+                              value: val.toString(),
+                              child: Text(val.toString()),
+                            );
+                          }).toList(),
                         )
-                      ]
-                  ),
+                      ]),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -359,18 +346,13 @@ class TimerPageState extends State<TimerPage> {
                         child: Text("coin+"),
                       ),
                       TextButton(
-                        onPressed: _decrementcoin,
-                        child: Text("coin-")
-                      ),
+                          onPressed: _decrementcoin, child: Text("coin-")),
                       Text("$_coin"),
                     ],
                   )
                 ])));
-    
   }
 }
-
-
 
 // Fruit Stand Display
 class TomatoPage extends StatefulWidget {
@@ -378,10 +360,10 @@ class TomatoPage extends StatefulWidget {
   final String title;
 
   @override
-  State <TomatoPage> createState() =>  TomatoPageState();
+  State<TomatoPage> createState() => TomatoPageState();
 }
 
-class  TomatoPageState extends State<TomatoPage> {
+class TomatoPageState extends State<TomatoPage> {
   // assets
   List<String> _tomatoes = [];
   int _coin = 0;
@@ -400,7 +382,8 @@ class  TomatoPageState extends State<TomatoPage> {
       _coin = (prefs.getInt('coin') ?? 0);
     });
   }
-  Future<void> _saveassets () async {
+
+  Future<void> _saveassets() async {
     print('assets saved');
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -424,30 +407,31 @@ class  TomatoPageState extends State<TomatoPage> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
-                padding: const EdgeInsets.all(8), 
+                padding: const EdgeInsets.all(8),
                 children: [
-                  for (var i in _tomatoes) InkWell(
-                    onTap: () {
-                      showAlertDialog(context: context, time: i, tomatoes: _tomatoes);
-                    },
-                    child: Image.asset(
-                      'assets/images/tomato.png',
-                      fit: BoxFit.cover,
-                    ),
-                  )
+                  for (var i in _tomatoes)
+                    InkWell(
+                      onTap: () {
+                        showAlertDialog(
+                            context: context, time: i, tomatoes: _tomatoes);
+                      },
+                      child: Image.asset(
+                        'assets/images/tomato.png',
+                        fit: BoxFit.cover,
+                      ),
+                    )
                 ],
               ),
             ),
             TextButton(
-              child: Text("Sell All"),
-              onPressed: () {
-                for (var i in _tomatoes) {
-                  _coin = _coin + int.parse(i) * 10;
-                } 
-                _tomatoes.clear();
-                _saveassets();
-              }
-            )
+                child: Text("Sell All"),
+                onPressed: () {
+                  for (var i in _tomatoes) {
+                    _coin = _coin + int.parse(i) * 10;
+                  }
+                  _tomatoes.clear();
+                  _saveassets();
+                })
           ],
         ),
       ),
@@ -455,24 +439,23 @@ class  TomatoPageState extends State<TomatoPage> {
   }
 }
 
-showAlertDialog({required BuildContext context, required String time, required List<String> tomatoes}) {
+showAlertDialog(
+    {required BuildContext context,
+    required String time,
+    required List<String> tomatoes}) {
   int price = int.parse(time) * 10;
 
   // set up the button
   Widget okButton = TextButton(
     child: Text("Sell"),
-    onPressed: () {  },
+    onPressed: () {},
   );
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
     title: Text("Tomato"),
-    content: Column (
-      children: [
-        Text("Time Focused: $time"),
-        Text("Price: $price")
-      ]
-    ),
+    content:
+        Column(children: [Text("Time Focused: $time"), Text("Price: $price")]),
     actions: [
       okButton,
     ],
@@ -495,4 +478,3 @@ void main() {
     ),
   );
 }
-
