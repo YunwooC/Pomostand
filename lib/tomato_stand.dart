@@ -5,6 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 import 'dart:ui' as ui;
 
+import 'store.dart';
+import 'timer.dart';
+import 'main.dart';
+
 class TomatoStandPage extends StatefulWidget {
   const TomatoStandPage({Key? key}) : super(key: key);
 
@@ -86,13 +90,78 @@ class _TomatoStandPageState extends State<TomatoStandPage> {
     int price;
     String time;
     return Scaffold(
+
+
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 1,
+        elevation: 0,
         iconTheme: IconThemeData(
-          color: Colors.black
+          color: Color(0xffeb5c3c)
         ),
       ),
+
+
+      drawer: Drawer(
+        width: 150.0,
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the drawer if there isn't enough vertical
+        // space to fit everything.
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 223, 116, 109),
+              ),
+              child: Text('POMOSTAND'),
+            ),
+            ListTile(
+              title: const Text('Main'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return IndexPage(title: "Timer");
+                  })
+                );
+              }
+            ),
+            ListTile(
+              title: const Text('Timer'),
+              onTap: () {
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                    return const TimerPage(title: "Timer");
+                  })
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Stand'),
+              onTap: () {
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                    return const TomatoStandPage();
+                  })
+                );
+              },
+            ),
+            ListTile(
+              title: const Text("Store"),
+              onTap: () {
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                    return const StorePage();
+                  })
+                );
+              }
+            ),
+          ],
+        ),
+      ),
+
+
       body: Column(
         children: [
           // Coin

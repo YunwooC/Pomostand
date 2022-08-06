@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'dart:developer';
 import 'dart:ui' as ui;
+import 'icomoon_icons.dart';
+
+import 'tomato_stand.dart';
+import 'store.dart';
+import 'main.dart';
 
 class TimerPage extends StatefulWidget {
   const TimerPage({Key? key, required this.title}) : super(key: key);
@@ -116,6 +122,7 @@ class TimerPageState extends State<TimerPage> {
   }
 
   setTimer(int timeInMin) {
+    print("set timer called");
     TimeInMin = timeInMin;
     TimeInSec = TimeInMin * 60;
     LeftMin = TimeInMin;
@@ -143,12 +150,69 @@ class TimerPageState extends State<TimerPage> {
     });
   }
 
+
   getTime() {
+    int _currentValue = 25;
     Time = LeftMin < 10 ? '0' + LeftMin.toString() : LeftMin.toString();
     Time = Time +
-        ' : ' +
+        ':' +
         (LeftSec < 10 ? '0' + LeftSec.toString() : LeftSec.toString());
-    return Text(Time);
+    
+    return InkWell(
+      child: Text(Time, style: TextStyle(color: Colors.white, fontSize: 27, letterSpacing: 1.3)),
+      onTap: () {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(30.0),
+              actionsAlignment: MainAxisAlignment.center,
+              content: Container(
+                height: 50,
+                child: StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setState) {
+                    return Column(
+                      children: [
+                        NumberPicker(
+                          axis: Axis.horizontal,
+                          value: _currentValue,
+                          minValue: 10,
+                          maxValue: 120,
+                          step: 5,
+                          itemWidth:50,
+                          selectedTextStyle: TextStyle(fontSize: 25, color: Color(0xffeb5c3c)),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              left: BorderSide(width: 2.0, color: Color.fromARGB(255, 234, 234, 234)),
+                              right: BorderSide(width: 2.0, color: Color.fromARGB(255, 234, 234, 234))
+                            )
+                          ),
+                          onChanged: (value) => setState(() => _currentValue = value),
+                        )
+                      ]
+                    );
+                  },
+                ),
+              ),
+              actions: [
+                TextButton(
+                  child: Text("Set", style: TextStyle(color: Color(0xffeb5c3c))),
+                  onPressed: () {
+                    print("Set called");
+                    print(_currentValue);
+                    setState(() => setTimer(int.parse(_currentValue.toString())));
+                  
+                    Navigator.pop(context);
+                  }
+                )
+              ]
+            );
+          },
+        );
+      },
+      borderRadius: BorderRadius.circular(50),
+    );
   }
 
   @override
@@ -156,44 +220,115 @@ class TimerPageState extends State<TimerPage> {
     initializeList();
     print("timer page built");
     return Scaffold(
-      // Top AppBar
+      
+
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 1,
+        elevation: 0,
         title: Text("Timer Page"),
         iconTheme: IconThemeData(
-          color: Colors.black
-        )
+          color: Color(0xffeb5c3c)
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icomoon.Stand),
+            onPressed: () {
+              MaterialPageRoute() {
+                    return TomatoStandPage();
+              };
+            }
+          ),
+          IconButton(
+            icon: Icon(Icomoon.ShopIcon),
+            onPressed: () {
+              print("onpressed");
+              MaterialPageRoute() {
+                return StorePage();
+              };
+            }
+          )
+        ]
       ),
+
+
+      drawer: Drawer(
+        width: 150.0,
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the drawer if there isn't enough vertical
+        // space to fit everything.
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 223, 116, 109),
+              ),
+              child: Text('POMOSTAND'),
+            ),
+            ListTile(
+              title: const Text('Main'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return IndexPage(title: "Timer");
+                  })
+                );
+              }
+            ),
+            ListTile(
+              title: const Text('Timer'),
+              onTap: () {
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                    return const TimerPage(title: "Timer");
+                  })
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Stand'),
+              onTap: () {
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                    return const TomatoStandPage();
+                  })
+                );
+              },
+            ),
+            ListTile(
+              title: const Text("Store"),
+              onTap: () {
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                    return const StorePage();
+                  })
+                );
+              }
+            ),
+          ],
+        ),
+      ),
+
 
       body: Container(
         padding: const EdgeInsets.only(left: 40.0, right: 40.0, top: 40.0, bottom: 40.0),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Icon(
-                  Icons.monetization_on_outlined,
-                  size: 20,
-                  color: Colors.orange,
-                ),
-                Text(" $_coin"),
-              ]
-            ),
             SizedBox(height:90),
             Stack(
               alignment: Alignment.center,
               children: [
-                Image.asset('assets/images/Tomato_1.png', fit: BoxFit.contain),
+                Image.asset('assets/images/Tomato_1.png', fit: BoxFit.contain, width: 230),
                 CircularPercentIndicator(
-                  backgroundColor: Colors.transparent,
-                  progressColor: Colors.red,
+                  backgroundColor: Colors.white,
+                  progressColor: Color(0xffeb5c3c),
                   percent: percent,
                   animation: true,
                   animateFromLastPercent: true,
-                  radius: 80,
-                  lineWidth: 10,
+                  radius: 75,
+                  lineWidth: 5,
                 ),
                 getTime(),
               ]
@@ -203,17 +338,12 @@ class TimerPageState extends State<TimerPage> {
                 Expanded(
                   child: Visibility(
                     visible: _IsVisibleStart,
-                    child: TextButton(
-                        onPressed: startTimer,
-                        child: Text("Start"),
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.red),
-                            foregroundColor:
-                                MaterialStateProperty.all(Colors.white),
-                            overlayColor: MaterialStateProperty.all(Color(0xFFCDB1B6))
-                        )
-                    ),
+                    child: IconButton(
+                      onPressed: startTimer,
+                      icon: Icon(Icons.play_arrow_rounded),
+                      iconSize: 50,
+                      color: Color(0xffeb5c3c)
+                    )
                   )
                 ),
                 // Pause Button, Resume Button
@@ -221,78 +351,30 @@ class TimerPageState extends State<TimerPage> {
                   child: Visibility(
                     visible: _IsVisiblePause,
                     // ignore: sort_child_properties_last
-                    child: TextButton(
-                        onPressed: pauseTimer,
-                        child: const Text("Pause"),
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.red),
-                            foregroundColor: MaterialStateProperty.all(Colors.white),
-                            shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6.0),
-                                  )
-                            ),
-                            overlayColor: MaterialStateProperty.all(Color(0xFFCDB1B6))                          
-                        )
+                    child: IconButton(
+                      onPressed: pauseTimer,
+                      icon: const Icon(Icons.pause_circle_filled_rounded),
+                      iconSize: 50,
+                      color: Color(0xffeb5c3c),
                     ),
                     // Resume Button appears in place of pause
-                    replacement: TextButton(
+                    replacement: IconButton(
                       onPressed: resumeTimer,
-                      child: Text("Resume"),
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.red),
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6.0),
-                              )
-                          ),
-                          overlayColor: MaterialStateProperty.all(Color(0xFFCDB1B6))     
-                      ),
-                            
-                    )
+                      icon: const Icon(Icons.play_arrow_rounded),
+                      iconSize: 50,
+                      color: Color(0xffeb5c3c),
+                    ),
                   ),
                 ),
                 // Reset Button
                 Expanded(
-                  child: TextButton(
-                      onPressed: resetTimer,
-                      child: Text("Reset"),
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.red),
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6.0)),
-                          ),
-                          overlayColor: MaterialStateProperty.all(Color(0xFFCDB1B6))
-                      )   
+                  child: IconButton(
+                    onPressed: resetTimer,
+                    icon: const Icon(Icons.stop_circle_rounded),
+                    iconSize: 50,
+                    color: Color(0xffeb5c3c),
                   )
                 ),
-
-                Expanded(
-                  child: DropdownButton<String>(
-                        value: _dropdownValue,
-                        onChanged: (String? newValue) {
-                          print('update called');
-                          setTimer(int.parse(newValue.toString()));
-                          setState(() {
-                            _dropdownValue = newValue!;
-                          });
-                        },
-                        items: numList.map((int val) {
-                          return new DropdownMenuItem<String>(
-                            value: val.toString(),
-                            child: Text(val.toString()),
-                          );
-                        }).toList(),
-                  )
-                )
               ]
             )
           ]
