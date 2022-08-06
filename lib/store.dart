@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'micons_icons.dart';
 import 'tomato_stand.dart';
 import 'timer.dart';
 import 'main.dart';
@@ -77,6 +78,22 @@ class _StorePageState extends State<StorePage> {
           iconTheme: IconThemeData(
             color: Color(0xffeb5c3c)
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Micons.StandIcon),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => IndexPage(title: 'main')),
+                );
+              }
+            ),
+            IconButton(
+              padding: EdgeInsets.all(6.0),
+              icon: Icon(Micons.StoreIcon),
+              onPressed: null
+            )
+          ]
       ),
 
 

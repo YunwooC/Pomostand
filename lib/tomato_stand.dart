@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 import 'dart:ui' as ui;
 
+import 'micons_icons.dart';
 import 'store.dart';
 import 'timer.dart';
 import 'main.dart';
@@ -98,6 +99,28 @@ class _TomatoStandPageState extends State<TomatoStandPage> {
         iconTheme: IconThemeData(
           color: Color(0xffeb5c3c)
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Micons.StandIcon),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => IndexPage(title: 'main')),
+              );
+            }
+          ),
+          IconButton(
+            padding: EdgeInsets.all(6.0),
+            icon: Icon(Micons.StoreIcon),
+            onPressed: () {
+              print("onpressed");
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const StorePage()),
+              );
+            }
+          )
+        ]
       ),
 
 

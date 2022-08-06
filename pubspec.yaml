@@ -69,9 +69,9 @@ flutter:
     - family: metrisch
       fonts:
         - asset: assets/fonts/Metrisch-Light-webfont.ttf
-    - family: icomoon
+    - family: Micons
       fonts:
-        - asset: assets/fonts/icomoon.ttf
+        - asset: assets/fonts/Micons.ttf
 
 
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'micons_icons.dart';
 import 'timer.dart';
 import 'tomato_stand.dart';
 import 'store.dart';
@@ -73,6 +74,23 @@ class IndexPage extends StatelessWidget {
           iconTheme: IconThemeData(
             color: Color(0xffeb5c3c)
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Micons.StandIcon),
+              onPressed: null
+            ),
+            IconButton(
+              padding: EdgeInsets.all(6.0),
+              icon: Icon(Micons.StoreIcon),
+              onPressed: () {
+                print("onpressed");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const StorePage()),
+                );
+              }
+            )
+          ]
       ),
 
       drawer: Drawer(
