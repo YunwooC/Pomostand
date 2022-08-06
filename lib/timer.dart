@@ -28,8 +28,9 @@ class TimerPageState extends State<TimerPage> {
   static String Time = "";
   bool pause = false;
   bool stop = false;
+  bool dropDownVisible = true;
   bool _IsVisibleStart = true;
-  bool _IsVisiblePause = true;
+  bool _IsVisiblePause = false;
   List<int> numList = [];
 
   // set up for coin system
@@ -65,6 +66,7 @@ class TimerPageState extends State<TimerPage> {
       print('$_tomatoes');
     });
   }
+
   Future<void> _saveassets() async {
     print('tomatoes saved');
     final prefs = await SharedPreferences.getInstance();
@@ -92,6 +94,8 @@ class TimerPageState extends State<TimerPage> {
 
     setState(() {
       _IsVisibleStart = false;
+      _IsVisiblePause = true;
+      dropDownVisible = false;
     });
 
     Timer timer = Timer.periodic(oneSec, (Timer timer) {
@@ -145,15 +149,23 @@ class TimerPageState extends State<TimerPage> {
     percent = 0;
     // RESETS TIMER BACK TO THE START
     setState(() {
+      dropDownVisible = true;
       _IsVisibleStart = true;
-      _IsVisiblePause = true;
+      _IsVisiblePause = false;
     });
   }
 
 
   getTime() {
+<<<<<<< HEAD
     int _currentValue = 25;
     Time = LeftMin < 10 ? '0' + LeftMin.toString() : LeftMin.toString();
+=======
+    int Hour = (LeftMin / 60).toInt();
+    int Min = LeftMin % 60;
+    Time = Hour < 10 ? '0' + Hour.toString() : Hour.toString();
+    Time = Time + ' : ' + (Min < 10 ? '0' + Min.toString() : Min.toString());
+>>>>>>> acf282d1e367d8af8b85c39303b0643c474f4602
     Time = Time +
         ':' +
         (LeftSec < 10 ? '0' + LeftSec.toString() : LeftSec.toString());
@@ -223,6 +235,7 @@ class TimerPageState extends State<TimerPage> {
       
 
       appBar: AppBar(
+<<<<<<< HEAD
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text("Timer Page"),
@@ -310,9 +323,16 @@ class TimerPageState extends State<TimerPage> {
           ],
         ),
       ),
+=======
+          backgroundColor: Colors.white,
+          elevation: 1,
+          title: Text("Timer Page"),
+          iconTheme: IconThemeData(color: Colors.black)),
+>>>>>>> acf282d1e367d8af8b85c39303b0643c474f4602
 
 
       body: Container(
+<<<<<<< HEAD
         padding: const EdgeInsets.only(left: 40.0, right: 40.0, top: 40.0, bottom: 40.0),
         child: Column(
           children: [
@@ -348,18 +368,79 @@ class TimerPageState extends State<TimerPage> {
                 ),
                 // Pause Button, Resume Button
                 Expanded(
+=======
+          padding: const EdgeInsets.only(
+              left: 40.0, right: 40.0, top: 40.0, bottom: 40.0),
+          child: Column(children: [
+            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Icon(
+                Icons.monetization_on_outlined,
+                size: 20,
+                color: Colors.orange,
+              ),
+              Text(" $_coin"),
+            ]),
+            SizedBox(height: 90),
+            Stack(alignment: Alignment.center, children: [
+              Image.asset('assets/images/Tomato_1.png', fit: BoxFit.contain),
+              CircularPercentIndicator(
+                backgroundColor: Colors.transparent,
+                progressColor: Colors.red,
+                percent: percent,
+                animation: true,
+                animateFromLastPercent: true,
+                radius: 80,
+                lineWidth: 10,
+              ),
+              getTime(),
+            ]),
+            Row(children: <Widget>[
+              Expanded(
+>>>>>>> acf282d1e367d8af8b85c39303b0643c474f4602
                   child: Visibility(
+                visible: _IsVisibleStart,
+                child: TextButton(
+                    onPressed: startTimer,
+                    child: Text("Start"),
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.red),
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                        overlayColor:
+                            MaterialStateProperty.all(Color(0xFFCDB1B6)))),
+              )),
+              // Pause Button, Resume Button
+              Expanded(
+                child: Visibility(
                     visible: _IsVisiblePause,
                     // ignore: sort_child_properties_last
+<<<<<<< HEAD
                     child: IconButton(
                       onPressed: pauseTimer,
                       icon: const Icon(Icons.pause_circle_filled_rounded),
                       iconSize: 50,
                       color: Color(0xffeb5c3c),
                     ),
+=======
+                    child: TextButton(
+                        onPressed: pauseTimer,
+                        child: const Text("Pause"),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.red),
+                            foregroundColor:
+                                MaterialStateProperty.all(Colors.white),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6.0),
+                            )),
+                            overlayColor:
+                                MaterialStateProperty.all(Color(0xFFCDB1B6)))),
+>>>>>>> acf282d1e367d8af8b85c39303b0643c474f4602
                     // Resume Button appears in place of pause
                     replacement: IconButton(
                       onPressed: resumeTimer,
+<<<<<<< HEAD
                       icon: const Icon(Icons.play_arrow_rounded),
                       iconSize: 50,
                       color: Color(0xffeb5c3c),
@@ -381,5 +462,60 @@ class TimerPageState extends State<TimerPage> {
         )
       ),
     );  
+=======
+                      child: Text("Resume"),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.red),
+                          foregroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                          shape:
+                              MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                          )),
+                          overlayColor:
+                              MaterialStateProperty.all(Color(0xFFCDB1B6))),
+                    )),
+              ),
+              // Reset Button
+              Expanded(
+                  child: TextButton(
+                      onPressed: resetTimer,
+                      child: Text("Reset"),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.red),
+                          foregroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6.0)),
+                          ),
+                          overlayColor:
+                              MaterialStateProperty.all(Color(0xFFCDB1B6))))),
+
+              Expanded(
+                  child: Visibility(
+                      visible: dropDownVisible,
+                      child: DropdownButton<String>(
+                        value: _dropdownValue,
+                        onChanged: (String? newValue) {
+                          print('update called');
+                          setTimer(int.parse(newValue.toString()));
+                          setState(() {
+                            _dropdownValue = newValue!;
+                          });
+                        },
+                        items: numList.map((int val) {
+                          return new DropdownMenuItem<String>(
+                            value: val.toString(),
+                            child: Text(val.toString()),
+                          );
+                        }).toList(),
+                      )))
+            ])
+          ])),
+    );
+>>>>>>> acf282d1e367d8af8b85c39303b0643c474f4602
   }
 }
