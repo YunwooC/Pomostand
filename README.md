@@ -1,16 +1,26 @@
-# pomostand
+# POMOSTAND
 
-A new Flutter project.
+![Image Unloaded](https://github.com/YunwooC/Pomostand/tree/main/assets/Title_Page.png)
 
-## Getting Started
+Have your own Pomodoro Stand!
 
-This project is a starting point for a Flutter application.
+POMOSTAND is a simple, Pomodoro productivity app where you can get tomatoes each time you focus on your work. Sell the tomatoes, acquire coins, and purchase items in the shop to decorate and customize your very own <em>pomostand</em>.
 
-A few resources to get you started if this is your first Flutter project:
+Currently in Development.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+# What is Pomodoro Technique?
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Pomodoro Technique is a productivity technique developed by Francesco Cirillo, and characterized by structured intervals of focusing and breaks, ideally 25 minutes and 5 minutes each. The idea is that regulated focus time intervals can boost your overall productivity.
+
+Read more about Pomodoro Technique here: [Pomodoro Technique](https://francescocirillo.com/products/the-pomodoro-technique)
+
+# Dev Log
+
+-----
+0.7
+-----
+
+  - Added custom Time Selection feature for the timer
+  - Updated interface (Main page, timer page, stand page, store)
+  - Added Navigable Icons for Shop and Stand
+  - Added Illustration for the main page
