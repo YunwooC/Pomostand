@@ -29,6 +29,7 @@ Read more about Pomodoro Technique here: [Pomodoro Technique](https://francescoc
 -----
 
   - Added custom Time Selection feature for the timer
-  - Updated interface (Main page, timer page, stand page, store)
   - Added Navigable Icons for Shop and Stand
   - Added Illustration for the main page
+  - Updated interface (Main page, timer page, stand page, store)
+  - Updated sprite for the tomato in Tomato_stand
