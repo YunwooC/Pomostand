@@ -1,6 +1,6 @@
 # POMOSTAND
 
-<img src="https://github.com/YunwooC/Pomostand/blob/main/assets/Title_page.png" = 350x500>
+![Image Unloaded](https://github.com/YunwooC/Pomostand/blob/main/assets/Title_page.png =350x500)
 
 Have your own Pomodoro Stand!
 
