@@ -1,8 +1,6 @@
 # POMOSTAND
 
-![Image Unloaded](https://github.com/YunwooC/Pomostand/blob/main/assets/Title_page.png =350x500)
-
-<img src="assets/Title_page.png" width="350">
+<img src="assets/Title_page.png" width="400">
 
 Have your own Pomodoro Stand!
 
@@ -18,7 +16,7 @@ Read more about Pomodoro Technique here: [Pomodoro Technique](https://francescoc
 
 # Timer
 
-<img src="https://github.com/YunwooC/Pomostand/blob/main/assets/Timer_page_rn.png" = 350x500>
+<img src="assets/Timer_page_rn.png" width="400">
 
 # Dev Log
 
