@@ -2,6 +2,8 @@
 
 ![Image Unloaded](https://github.com/YunwooC/Pomostand/blob/main/assets/Title_page.png =350x500)
 
+<img src="assets/Title_page.png" width="350">
+
 Have your own Pomodoro Stand!
 
 POMOSTAND is a simple, Pomodoro productivity app where you can get tomatoes each time you focus on your work. Sell the tomatoes, acquire coins, and purchase items in the shop to decorate and customize your very own <em>pomostand</em>.
