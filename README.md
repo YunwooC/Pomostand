@@ -4,13 +4,13 @@
 
 Have your own Pomodoro Stand!
 
-POMOSTAND is a simple, Pomodoro productivity app where you can get tomatoes each time you focus on your work. Sell the tomatoes, acquire coins, and purchase items in the shop to decorate and customize your very own <em>pomostand</em>.
+POMOSTAND is a simple Pomodoro productivity app where you can earn "tomatoes" each time you complete a focus session. Sell the tomatoes, acquire coins, and purchase items in the shop to decorate and customize your very own <em>pomostand</em>.
 
 <em>Currently in Development.</em>
 
 # What is Pomodoro Technique?
 
-Pomodoro Technique is a productivity technique developed by Francesco Cirillo, and characterized by structured intervals of focusing and breaks, ideally 25 minutes and 5 minutes each. The idea is that regulated focus time intervals can boost your overall productivity.
+Pomodoro Technique is a productivity technique developed by Francesco Cirillo which is characterized by structured intervals of focusing and breaks that are typically 25 minutes and 5 minutes each. The idea is that regulated focus time intervals can boost your overall productivity.
 
 Read more about Pomodoro Technique here: [Pomodoro Technique](https://francescocirillo.com/products/the-pomodoro-technique)
 
