@@ -25,7 +25,7 @@ Read more about Pomodoro Technique here: [Pomodoro Technique](https://francescoc
 # Dev Log
 
 -----
-0.7
+0.7.1
 -----
 
   - Added custom Time Selection feature for the timer
