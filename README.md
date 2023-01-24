@@ -14,6 +14,10 @@ Pomodoro Technique is a productivity technique developed by Francesco Cirillo, a
 
 Read more about Pomodoro Technique here: [Pomodoro Technique](https://francescocirillo.com/products/the-pomodoro-technique)
 
+# Timer
+
+![Image Unloaded](https://github.com/YunwooC/Pomostand/blob/main/assets/Timer_page_rn.png)
+
 # Dev Log
 
 -----
