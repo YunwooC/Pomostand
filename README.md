@@ -33,3 +33,4 @@ Read more about Pomodoro Technique here: [Pomodoro Technique](https://francescoc
   - Added Illustration for the main page
   - Updated interface (Main page, timer page, stand page, store)
   - Updated sprite for the tomato in Tomato_stand
+  - Updated ReadMe.md
